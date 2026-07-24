@@ -319,3 +319,124 @@ export async function generatePracticeStory(
   const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
   return cleanAndParseJson(responseText);
 }
+
+/**
+ * Advanced AI consultation for classical poetry, specific lines, and custom reading materials
+ */
+export async function consultPoetryOrTextAI(
+  apiKey: string,
+  question: string,
+  model: string = 'gemini-2.5-flash'
+) {
+  const key = apiKey.trim();
+  if (!key) {
+    throw new Error('请先在【模型与密钥设置】中填写您的 Gemini API 密钥');
+  }
+
+  const prompt = `你是一个精通汉语拼音、古诗词鉴赏和语文教学的AI专家。
+用户提问或请求：
+"${question}"
+
+请仔细分析用户的需求（如咨询某首古诗、请求某某句、要求生成朗读素材或诗词解析）。
+请以结构化的 JSON 格式返回结果（raw JSON without markdown codeblock）：
+{
+  "title": "诗词标题或主题名称",
+  "author": "作者与朝代（如果是古诗词）",
+  "category": "poem",
+  "content": "正文内容（如果是古诗词或文章，每句换行）",
+  "translation": "白话文解释或诗意翻译",
+  "readingTips": "朗读要领、发音难点及背诵建议",
+  "aiExplanation": "针对用户提问的详细解答与诗词鉴赏"
+}`;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' }
+    })
+  });
+
+  const resData = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(resData.error?.message || `HTTP ${res.status}: AI 咨询失败，请检查 API Key`);
+  }
+
+  const respText = resData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+  return cleanAndParseJson(respText);
+}
+
+/**
+ * Advanced AI consultation for Polyphonic characters & generation
+ */
+export async function consultPolyphonicAI(
+  apiKey: string,
+  query: string,
+  model: string = 'gemini-2.5-flash'
+) {
+  const key = apiKey.trim();
+  if (!key) {
+    throw new Error('请先在【模型与密钥设置】中填写您的 Gemini API 密钥');
+  }
+
+  // 1. Try server backend API first if available
+  try {
+    const res = await fetch('/api/ai/consult-polyphonic', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, apiKey: key, model })
+    });
+
+    const data = await parseJsonResponse(res);
+    if (res.ok && data && !data.error) {
+      return data;
+    }
+    if (data && data.error && res.status !== 404) {
+      throw new Error(data.error);
+    }
+  } catch (err: any) {
+    if (err.message && !err.message.includes('Unexpected token') && !err.message.includes('Failed to fetch')) {
+      throw err;
+    }
+  }
+
+  // 2. Direct browser REST API fallback
+  const prompt = `你是一个精通汉语拼音与多音字辨析的语文教学 AI 专家。
+用户提问或查询：
+"${query}"
+
+请分析用户要求的汉字或多音字问题，并按标准多音字字典格式返回 JSON (raw JSON without markdown codeblock)：
+{
+  "char": "汉字",
+  "aiExplanation": "对该汉字多音字语境辨析的详细解答与老师建议",
+  "pronunciations": [
+    {
+      "pinyin": "拼音(带声调)",
+      "meaning": "此读音的词义解释",
+      "examples": ["组词1", "组词2"],
+      "sampleSentence": "包含该读音的完整标准例句"
+    }
+  ]
+}`;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' }
+    })
+  });
+
+  const resData = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(resData.error?.message || `HTTP ${res.status}: AI 多音字咨询失败，请检查 API Key`);
+  }
+
+  const respText = resData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+  return cleanAndParseJson(respText);
+}
+

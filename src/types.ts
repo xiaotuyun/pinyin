@@ -12,6 +12,7 @@ export interface PinyinResultChar {
 }
 
 export interface PolyphonicEntry {
+  id?: string;
   char: string;
   pronunciations: {
     pinyin: string;
@@ -19,6 +20,7 @@ export interface PolyphonicEntry {
     examples: string[];
     sampleSentence: string;
   }[];
+  isCustom?: boolean;
 }
 
 export interface ReadingMaterial {

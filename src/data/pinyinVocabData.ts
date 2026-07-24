@@ -174,7 +174,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
 疑是地上霜。
 举头望明月，
 低头思故乡。`,
-    translation: 'Moonlight hits the foot of my bed, like frost on the ground. Raising my head, I look at the bright moon; bowing my head, I long for my hometown.'
+    translation: '明亮的月光洒在床前的窗户纸上，好像地上铺了一层白霜。抬起头来望着天上的明月，不由得低下头来思念起远方的故乡。'
   },
   {
     id: 'poem-2',
@@ -186,7 +186,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
 曲项向天歌。
 白毛浮绿水，
 红掌拨清波。`,
-    translation: 'Goose, goose, goose, with curved neck singing to the sky. White feathers float on green water, red webs push clear waves.'
+    translation: '鹅、鹅、鹅，洁白的脖颈弯曲着向着蓝天高歌。雪白的羽毛浮在碧绿的水面上，红红的脚掌划动着清澈的波纹。'
   },
   {
     id: 'poem-3',
@@ -198,7 +198,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
 黄河入海流。
 欲穷千里目，
 更上一层楼。`,
-    translation: 'The white sun sets behind the mountains, the Yellow River flows into the sea. To see a thousand miles further, step up another story.'
+    translation: '夕阳依傍着西山慢慢落下，滚滚黄河水向大海奔腾流去。要想看到千里之外的广阔风景，就要再登上一层楼台。'
   },
   {
     id: 'twister-1',
@@ -209,7 +209,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
 十四是十四，四十是四十。
 莫把十四说四十，
 莫把四十说十四。`,
-    translation: 'Classic tongue twister practicing "s" (平舌音) vs "sh" (翘舌音).'
+    translation: '本绕口令专门训练平舌音“s”与翘舌音“sh”的发音清晰度与转换灵活性。'
   },
   {
     id: 'twister-2',
@@ -220,7 +220,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
 炮兵并排北坡炮。
 炮兵怕把标兵碰，
 标兵怕碰炮兵炮。`,
-    translation: 'Classic tongue twister practicing "b" and "p" labial sounds.'
+    translation: '本绕口令重点训练唇音“b”、“p”以及双音节连读的节奏感与准确性。'
   },
   {
     id: 'twister-3',
@@ -229,7 +229,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
     difficulty: 'intermediate',
     content: `吃葡萄不吐葡萄皮，
 不吃葡萄倒吐葡萄皮。`,
-    translation: 'Eat grapes without spitting grape skins, do not eat grapes yet spit grape skins.'
+    translation: '经典趣味绕口令，帮助小朋友锻炼唇齿灵活度及前后鼻音转换。'
   },
   {
     id: 'idiom-1',
@@ -237,7 +237,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
     category: 'idiom',
     difficulty: 'beginner',
     content: `天行健，君子以自强不息。`,
-    translation: 'As heaven maintain vigor through movement, gentlefolk should constantly strive for self-improvement.'
+    translation: '宇宙自然运行刚强劲健，有道德的人应当像天体运行那样坚韧不拔、奋发图强、永不懈怠。'
   },
   {
     id: 'idiom-2',
@@ -245,7 +245,7 @@ export const READING_MATERIALS: ReadingMaterial[] = [
     category: 'idiom',
     difficulty: 'beginner',
     content: `温故而知新，可以为师矣。`,
-    translation: 'Reviewing the old and learning the new enables one to become a teacher.'
+    translation: '温习学过的知识，进而能从中获得新的理解与体会，这样的人就可以凭借此做老师了。'
   }
 ];
 

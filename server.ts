@@ -224,6 +224,52 @@ Provide a JSON response (no markdown fences, raw JSON only):
     }
   });
 
+  // API endpoint for Polyphonic AI consultation & generation
+  app.post("/api/ai/consult-polyphonic", async (req, res) => {
+    try {
+      const apiKey = req.body.apiKey || process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        return res.status(400).json({ error: "请先在【模型与密钥设置】中填入您的 Gemini API 密钥" });
+      }
+
+      const { query, model } = req.body;
+      const selectedModel = model || "gemini-3.6-flash";
+      const ai = new GoogleGenAI({ apiKey });
+
+      const prompt = `你是一个精通汉语拼音与多音字辨析的语文教学 AI 专家。
+用户提问或查询：
+"${query}"
+
+请分析用户要求的汉字或多音字问题，并按标准多音字字典格式返回 JSON (raw JSON without markdown codeblock)：
+{
+  "char": "汉字",
+  "aiExplanation": "对该汉字多音字语境辨析的详细解答与老师建议",
+  "pronunciations": [
+    {
+      "pinyin": "拼音(带声调)",
+      "meaning": "此读音的词义解释",
+      "examples": ["组词1", "组词2"],
+      "sampleSentence": "包含该读音的完整标准例句"
+    }
+  ]
+}`;
+
+      const response = await ai.models.generateContent({
+        model: selectedModel,
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+
+      const data = JSON.parse(response.text || "{}");
+      return res.json(data);
+    } catch (error: any) {
+      console.error("Consult polyphonic error:", error);
+      return res.status(500).json({ error: error?.message || "Internal server error" });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
