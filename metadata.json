@@ -1,0 +1,6 @@
+{
+  "name": "拼音大师",
+  "description": "专业的汉语拼音学习、汉字转拼音标注、多音字解析与互动拼读测试工具。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
