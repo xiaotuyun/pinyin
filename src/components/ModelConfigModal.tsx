@@ -20,6 +20,7 @@ import {
   getSelectedModel,
   setSelectedModel
 } from '../utils/aiConfig';
+import { listGeminiModels, testGeminiModel } from '../utils/geminiClient';
 
 interface ModelInfo {
   id: string;
@@ -116,25 +117,12 @@ export const ModelConfigModal: React.FC<ModelConfigModalProps> = ({
     setFetchError(null);
 
     try {
-      const res = await fetch('/api/ai/list-models', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: key })
-      });
-      const data = await res.json();
-
-      if (!res.ok || data.error) {
-        setFetchError(data.error || 'API 密钥输入错误或无效，无法列出模型');
-        setModels([]); // Do not display models if key is wrong!
-        setActiveModel('未设定模型');
-        localStorage.removeItem('gemini_selected_model');
-        if (onConfigChange) onConfigChange();
-      } else if (data.models && Array.isArray(data.models) && data.models.length > 0) {
-        setModels(data.models);
-        // Check if currently selected model exists in fetched models list
+      const fetchedModels = await listGeminiModels(key);
+      if (fetchedModels && fetchedModels.length > 0) {
+        setModels(fetchedModels);
         const currentModel = localStorage.getItem('gemini_selected_model');
-        if (!currentModel || !data.models.some((m: any) => m.id === currentModel)) {
-          const defaultFirst = data.models[0].id;
+        if (!currentModel || !fetchedModels.some((m) => m.id === currentModel)) {
+          const defaultFirst = fetchedModels[0].id;
           setSelectedModel(defaultFirst);
           setActiveModel(defaultFirst);
           if (onConfigChange) onConfigChange();
@@ -149,7 +137,7 @@ export const ModelConfigModal: React.FC<ModelConfigModalProps> = ({
         if (onConfigChange) onConfigChange();
       }
     } catch (err: any) {
-      setFetchError('请求失败，请检查网络状态及密钥正确性');
+      setFetchError(err?.message || '请求失败，请检查网络状态及密钥正确性');
       setModels([]);
       setActiveModel('未设定模型');
       localStorage.removeItem('gemini_selected_model');
@@ -172,17 +160,7 @@ export const ModelConfigModal: React.FC<ModelConfigModalProps> = ({
     }));
 
     try {
-      const res = await fetch('/api/ai/test-model', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          apiKey: key,
-          model: modelId,
-          testPrompt
-        })
-      });
-
-      const data = await res.json();
+      const data = await testGeminiModel(key, modelId, testPrompt);
       setTestResults((prev) => ({
         ...prev,
         [modelId]: {
@@ -199,7 +177,7 @@ export const ModelConfigModal: React.FC<ModelConfigModalProps> = ({
         [modelId]: {
           loading: false,
           success: false,
-          error: '网络异常或接口请求超时'
+          error: err?.message || '网络异常或接口请求超时'
         }
       }));
     }

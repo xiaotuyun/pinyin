@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Loader2, Volume2, BookOpen, CheckCircle2, Key, Cpu, AlertCircle, Settings } from 'lucide-react';
 import { parsePinyinText, speakText } from '../utils/pinyinUtils';
 import { getCustomApiKey, getSelectedModel } from '../utils/aiConfig';
+import { generatePracticeStory } from '../utils/geminiClient';
 
 interface AiAssistantProps {
   speechRate: number;
@@ -53,19 +54,7 @@ export const AiAssistant: React.FC<AiAssistantProps> = ({
     setLoading(true);
     setErrorMessage(null);
     try {
-      const res = await fetch('/api/ai/generate-practice', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          topic,
-          difficulty,
-          targetSounds,
-          apiKey,
-          model
-        })
-      });
-
-      const data = await res.json();
+      const data = await generatePracticeStory(apiKey, topic, difficulty, targetSounds, model);
       if (data.error) {
         setErrorMessage(data.error);
         setResult(null);
